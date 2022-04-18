@@ -65,6 +65,15 @@ let getProduct (getPage:Task<IPage>) =
             addCartButton.AsElement().IsDisabledAsync()
     }
 
+let executeCommand () =
+    let p = new System.Diagnostics.Process()
+    let i = new System.Diagnostics.ProcessStartInfo();
+    i.WindowStyle <- System.Diagnostics.ProcessWindowStyle.Hidden
+    i.FileName <- "bash"
+    i.Arguments <- " -c \"open -u https://www.gamestop.com/consoles-hardware/arcade/table-top-arcades/products/atgames-legends-gamer-pro-console/227025.html\""
+    p.StartInfo <- i
+    p.Start() |> ignore
+
 let xbox = "https://www.gamestop.com/pc-gaming/pc-gaming-controllers/products/microsoft-xbox-series-x-wireless-controller-carbon-black/11108954.html"
 let arcade = "https://www.gamestop.com/consoles-hardware/arcade/table-top-arcades/products/atgames-legends-gamer-pro-console/227025.html"
 
@@ -77,7 +86,11 @@ let main _ =
     |> Async.AwaitTask
     |> Async.RunSynchronously
     |> ( function
-        | false -> printfn "Is Available 💥"
-        | true -> printfn "Nuthin 😢"
-    )
-    0
+        | false ->
+            printfn "Is Available 💥"
+            executeCommand()
+            0
+        | true ->
+            printfn "Nuthin 😢"
+            1
+    )    
